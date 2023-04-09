@@ -1,0 +1,377 @@
+<html>
+<head>
+    <!-- <style>
+        /* Add some style to the website */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333333;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .playlist {
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        .playlist h2 {
+            color: #666666;
+        }
+
+        .playlist ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .playlist li {
+            padding: 5px;
+            border-bottom: 1px dotted #cccccc;
+        }
+
+        .playlist li:last-child {
+            border-bottom: none;
+        }
+
+        .playlist button {
+            display: inline-block;
+            margin: 10px 5px;
+            padding: 10px;
+            background-color: #333333;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .playlist button:hover {
+            background-color: #444444;
+        }
+
+        .add-playlist {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .add-playlist input {
+            padding: 10px;
+            border: 1px solid #cccccc;
+        }
+
+        .add-playlist button {
+            padding: 10px;
+            background-color: #333333;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .add-playlist button:hover {
+            background-color: #444444;
+        }
+    </style> -->
+
+     <!-- Add bootstrap CDN link
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+     <style>
+         /* Add some custom style to the website */
+         body {
+             background-color: #f0f0f0;
+         }
+ 
+         h1 {
+             text-align: center;
+             color: #333333;
+         }
+ 
+         .container {
+             width: 80%;
+             margin: 0 auto;
+         }
+ 
+         .playlist {
+             background-color: #ffffff;
+             border: 1px solid #cccccc;
+             padding: 10px;
+             margin: 10px;
+         }
+ 
+         .playlist h2 {
+             color: #666666;
+         }
+ 
+         .playlist ul {
+             list-style-type: none;
+             padding: 0;
+         }
+ 
+         .playlist li {
+             padding: 5px;
+             border-bottom: 1px dotted #cccccc;
+         }
+ 
+         .playlist li:last-child {
+             border-bottom: none;
+         }
+ 
+         .playlist button {
+             margin: 10px 5px;
+             cursor: pointer;
+         }
+ 
+         .add-playlist {
+             text-align: center;
+             margin-top: 20px;
+         }
+ 
+         .add-playlist input {
+             padding: 10px;
+             border: 1px solid #cccccc;
+         }
+ 
+         .add-playlist button {
+             padding: 10px;
+             cursor: pointer;
+         }
+     </style> -->
+
+      <!-- Add bootstrap CDN link -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        /* Add some custom style to the website */
+        body {
+            background-image: url("https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bXVzaWN8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"); /* Use a background image from unsplash */
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            font-size: 4rem;
+            text-shadow: 2px 2px 4px #000000; /* Add some text shadow to the title */
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .playlist {
+            background-color: rgba(255, 255, 255, 0.8); /* Use a semi-transparent white background for the playlists */
+            border: 1px solid #cccccc;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 10px; /* Add some border radius to the playlists */
+            box-shadow: 2px 2px 4px #000000; /* Add some box shadow to the playlists */
+        }
+
+        .playlist h2 {
+            color: #666666;
+            font-size: 2rem;
+        }
+
+        .playlist ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .playlist li {
+            padding: 5px;
+            border-bottom: 1px dotted #cccccc;
+            font-size: 1.2rem;
+        }
+
+        .playlist li:last-child {
+            border-bottom: none;
+        }
+
+        .playlist button {
+            margin: 10px 5px;
+            cursor: pointer;
+        }
+
+        .add-playlist {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .add-playlist input {
+            padding: 10px;
+            border: 1px solid #cccccc;
+        }
+
+        .add-playlist button {
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+
+
+</head>
+<body>
+    <h1>My Music Website</h1>
+    <div class="container">
+        <!-- Display the playlists and songs -->
+        <div id="playlists">
+            
+        </div>
+
+        <!-- Add a form to create a new playlist -->
+        <div class="add-playlist">
+            <h2>Create a new playlist</h2>
+            <form id="new-playlist-form">
+                <input type="text" id="new-playlist-name" placeholder="Enter playlist name" required>
+                <button type="submit" id="new-playlist-button">Create</button>
+            </form>
+        </div>
+    </div>
+
+
+
+<script>
+    // Define some variables to store the elements
+    var playlists = document.getElementById("playlists");
+    var newPlaylistForm = document.getElementById("new-playlist-form");
+    var newPlaylistName = document.getElementById("new-playlist-name");
+    var newPlaylistButton = document.getElementById("new-playlist-button");
+
+    // Define some sample data for the initial playlists and songs
+    var data = [
+        {
+            name: "Rock",
+            songs: ["Bohemian Rhapsody", "Livin' on a Prayer", "Smells Like Teen Spirit"]
+        },
+        {
+            name: "Pop",
+            songs: ["Bad Guy", "Shape of You", "Blinding Lights"]
+        },
+        {
+            name: "Jazz",
+            songs: ["Take Five", "So What", "Summertime"]
+        }
+    ];
+
+    // Define a function to display a playlist and its songs
+    function displayPlaylist(playlist) {
+        
+         // Create a div element for the playlist
+         var playlistDiv = document.createElement("div");
+         playlistDiv.className = "playlist";
+
+         // Create a h2 element for the playlist name
+         var playlistName = document.createElement("h2");
+         playlistName.textContent = playlist.name;
+
+         // Create a ul element for the song list
+         var songList = document.createElement("ul");
+
+         // Loop through the songs and create li elements for each song
+         for (var i = 0; i < playlist.songs.length; i++) {
+             var song = document.createElement("li");
+             song.textContent = playlist.songs[i];
+             songList.appendChild(song);
+         }
+
+         // Create a button element to add a new song
+         var addSongButton = document.createElement("button");
+         addSongButton.textContent = "Add a new song";
+         
+         // Add an event listener to the button to prompt the user for a song name
+         addSongButton.addEventListener("click", function() {
+             // Ask the user for a song name
+             var songName = prompt("Enter a song name");
+
+             // If the user entered a valid song name
+             if (songName) {
+                 // Add the song to the playlist data
+                 playlist.songs.push(songName);
+
+                 // Create a new li element for the song
+                 var newSong = document.createElement("li");
+                 newSong.textContent = songName;
+
+                 // Append the new song to the song list
+                 songList.appendChild(newSong);
+             }
+         });
+
+         // Create a button element to recommend songs
+         var recommendSongButton = document.createElement("button");
+         recommendSongButton.textContent = "Recommend songs";
+
+         // Add an event listener to the button to call the recommendation system api and display the recommendations
+         recommendSongButton.addEventListener("click", function() {
+             // Call the recommendation system api to get recommendations
+             var recommendations = getRecommendations(playlist);
+
+             // Loop through the recommendations and create li elements for each recommendation
+             for (var j = 0; j < recommendations.length; j++) {
+                 var recommendation = document.createElement("li");
+                 recommendation.textContent = recommendations[j];
+                 recommendation.style.color = "green"; // Use green color to indicate recommendations
+                 songList.appendChild(recommendation);
+             }
+         });
+
+         // Append the playlist name, song list and buttons to the playlist div
+         playlistDiv.appendChild(playlistName);
+         playlistDiv.appendChild(songList);
+         playlistDiv.appendChild(addSongButton);
+         playlistDiv.appendChild(recommendSongButton);
+
+         // Append the playlist div to the playlists container
+         playlists.appendChild(playlistDiv);
+    }
+
+    // Define a function to create a new playlist and display it
+    function createPlaylist(name) {
+        // Create a new playlist object with the given name and an empty song array
+        var newPlaylist = {
+            name: name,
+            songs: []
+        };
+
+        // Display the new playlist
+        displayPlaylist(newPlaylist);
+
+        // Add the new playlist to the data array
+        data.push(newPlaylist);
+    }
+
+    // Add an event listener to the new playlist form to handle submission
+    newPlaylistForm.addEventListener("submit", function(event) {
+        // Prevent the default form action
+        event.preventDefault();
+
+        // Get the value of the new playlist name input
+        var name = newPlaylistName.value;
+
+        // If the name is not empty
+        if (name) {
+            // Create a new playlist with the name
+            createPlaylist(name);
+
+            // Clear the input value
+            newPlaylistName.value = "";
+        }
+    });
+
+
+        // Loop through the initial data and display each playlist
+        for (var k = 0; k < data.length; k++) {
+            displayPlaylist(data[k]);
+        }
+    </script>
+</body>
+</html>
