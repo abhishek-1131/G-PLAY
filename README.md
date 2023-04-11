@@ -51,14 +51,3 @@ Music recommendation systems have become an integral part of our daily lives, an
 
 
 
-## **Steps to run the code**
-
-- To run using Jupyter Notebook
-  - Step 1: Get the dataset from the Spotify Million Playlist Challenge from  Aicrowd (Try to not go beyond 100 files).
-  - Step 2: Run the fixed_graph_gen.ipynb file ,and make sure to update the file path inside the notebooks.
-  - Step 3: After running the fixed_graph_gen.ipynb a pickle for our graph would be genrated after which you can run the LightGCN_model.ipynb notebook to view the results inside the notebook.
-  
-- To run as a web application
-  - Make sure to complete the above process of running the notebooks this will generate a pickle file for our model.
-  - After pickle file is generate run the recommendation_server.py file, it will start a server and listen to requests on "http://localhost:5000/recommend" endpoint.
-  - Get the FrontEndWebPage.html file open it in a browser give an  exisiting playlist name For ex: "Spring16", "TOP" etc (can be fetched from the dataset), the server will respond back with recommende songs and display it on the webpage.
