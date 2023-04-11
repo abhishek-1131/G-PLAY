@@ -25,11 +25,11 @@ The Spotify Million Playlist Dataset Challenge consists of a dataset and evaluat
 - PyTorch
 - networkx
 - DeepSnap
--graph-tool
--sklearn
--flask
--HTML/CSS
--ajax
+- graph-tool
+- sklearn
+- flask
+- HTML/CSS
+- ajax
 
 ## **Overview**
 
