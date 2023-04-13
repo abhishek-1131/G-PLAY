@@ -80,10 +80,10 @@ mapping = {old_label: new_label for new_label, old_label in enumerate(sorted(g_n
 # reindex the nodes in the graph
 g_nx = nx.relabel_nodes(g_nx, mapping)
 
-class LightGCNConv(MessagePassing):
+class LGCN_MessagePassing(MessagePassing):
     def __init__(self, in_channels, out_channels, normalize = True,
                  bias = False, **kwargs):  
-        super(LightGCNConv, self).__init__(**kwargs)
+        super(LGCN_MessagePassing, self).__init__(**kwargs)
 
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -102,62 +102,45 @@ class LightGCNConv(MessagePassing):
         out = torch_scatter.scatter(inputs, index, dim=node_dim, reduce='mean')
         return out
         
+# This is creates a light gcn along with muliple light gcn message passing and aggregation layers.
+ #  Here after calculating final embeddings of nodes after passing it through multiple LIGHT gcn message passing and aggregation layers, we calculate dot product of embeddings of pair of nodes that are defined in edge_label_index, which contains both negative and positive edges.
+ # We return this score for each entry in edge_label_index,  and the ground truth that is label for that partiicular pair is stored in edge_label. Both of these are then fed into our loss function so that it can learn to predict whether there exists a edge betweenpair of nodes or not. 
+    
 class LightGCN(torch.nn.Module):
-    def __init__(self, train_data, num_layers, emb_size=16, initialize_with_words=False):
+    def __init__(self, train_data, num_layers, emb_size=16):
         super(LightGCN, self).__init__()
         self.convs = nn.ModuleList()
-        assert (num_layers >= 1), 'Number of layers is not >=1'
         for l in range(num_layers):
-            self.convs.append(LightGCNConv(input_dim, input_dim))
-
-        # Initialize using custom embeddings if provided
-        num_nodes = train_data.node_label_index.size()[0]
-        self.embeddings = nn.Embedding(num_nodes, emb_size)
-        if initialize_with_words:
-            self.embeddings.weight.data.copy_(train_datanode_features)
-        
+            self.convs.append(LGCN_MessagePassing(0, 0))
+        total_nodes = train_data.node_label_index.size()[0]
+        self.embeddings = nn.Embedding(total_nodes, emb_size)
         self.loss_fn = nn.BCELoss()
         self.num_layers = num_layers
-        self.emb_size = emb_size
-        self.num_modes = num_nodes
 
     def forward(self, data):
         edge_index, edge_label_index, node_label_index = data.edge_index, data.edge_label_index, data.node_label_index
-        layer_embeddings = []
-        
         x = self.embeddings(node_label_index)
-        mean_layer = x
-
-        # We take an average of ever layer's node embeddings
+        final_emb = x
         for i in range(self.num_layers):
             x = self.convs[i](x, edge_index)
-            # print("x shape",x.shape)
-            # print("mean_layer shape",mean_layer.shape)
-            mean_layer += x
-
-        mean_layer /= 4
-
-        # Prediction head is simply dot product
-        nodes_first = torch.index_select(x, 0, edge_label_index[0,:].long())
-        nodes_second = torch.index_select(x, 0, edge_label_index[1,:].long())
-
-        # Since we don't want a rank output, we create a sigmoid of the dot product
-        out = torch.sum(nodes_first * nodes_second, dim=-1) # FOR RANKING
+            final_emb += x
+        final_emb /= self.num_layers
+        n1 = torch.index_select(final_emb, 0, edge_label_index[0,:].long())
+        n2 = torch.index_select(final_emb, 0, edge_label_index[1,:].long())
+        out = torch.sum(n1 * n2, dim=-1) 
         pred = torch.sigmoid(out)
-
         return torch.flatten(pred)
 
     def loss(self, pred, label):
         return self.loss_fn(pred, label)
-
 
 args = {
     'device' : 'cuda' if torch.cuda.is_available() else 'cpu',
     'num_layers' : 4,
     'emb_size' : 32,
     'weight_decay': 1e-6,
-    'lr': 0.05,
-    'epochs': 200
+    'lr': 0.2,
+    'epochs': 50
 }
 
     
@@ -242,7 +225,7 @@ def recommend():
     edge_label_tensor=torch.tensor(playlist_edge_label)
     ds_graph.edge_label_index=edge_label_tensor
     print('Loading graph done 2:', ds_graph.edge_label_index)
-    newModel = LightGCN(ds_graph, args['num_layers'], emb_size=args['emb_size'])
+    newModel = LightGCN(ds_graph, args['num_layers'], emb_size=32)
     newModel.load_state_dict(torch.load('pm_latest.pt'))
     pred=newModel(ds_graph)
     print('Pred before filtering',pred)
@@ -257,4 +240,3 @@ def recommend():
     return(gettrackname(uri_list))
 
 app.run()
-
