@@ -1,14 +1,5 @@
 # CMPT-733-Project
-
-# Project Proposal
-
-## **Project Members**
-
-- Abhishek Deshpande, asd27
-- Ayush Sharma, asa489
-- Bhavya Sankhla, bsa89
-- Rituraj Ojha
-
+View poster [here](https://github.com/abhishek-1131/G-PLAY/blob/main/poster_final.pdf)
 
 ## **Title** 
 Automated Playlist Continuation using GNNs
